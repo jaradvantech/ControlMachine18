@@ -36,7 +36,7 @@ class Palletizer
 	//PC Read variables
 	//----------------------------------------
 	bool EmergencyStopOfElectricCabinet;
-	bool AutomaticSelectionSwithc;
+	bool AutomaticSelectionSwitch;
 	bool ManualSelectionSwitch;
 	bool StartSwitch;
 	bool StopSwitch;

@@ -25,11 +25,11 @@ void Process_PGSI(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson
 	Palletizer *palletizer=GetPalletizer();
 	AnswerWriter->StartObject();
 	AnswerWriter->Key("command_ID");
-	AnswerWriter->String("command_ID");
+	AnswerWriter->String("PGSI");
 	AnswerWriter->Key("EmergencyStopOfElectricCabinet");
 	AnswerWriter->Bool(palletizer->EmergencyStopOfElectricCabinet);
-	AnswerWriter->Key("AutomaticSelectionSwithc");
-	AnswerWriter->Bool(palletizer->AutomaticSelectionSwithc);
+	AnswerWriter->Key("AutomaticSelectionSwitch");
+	AnswerWriter->Bool(palletizer->AutomaticSelectionSwitch);
 	AnswerWriter->Key("ManualSelectionSwitch");
 	AnswerWriter->Bool(palletizer->ManualSelectionSwitch);
 	AnswerWriter->Key("StartSwitch");
@@ -220,6 +220,93 @@ void Process_PING(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson
 	AnswerWriter->EndObject();
 }
 
+void Process_PWDA(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson::StringBuffer>* AnswerWriter)
+{
+	//rapidjson::Value& s = DOC_in["casa"];
+	//s.GetInt();
+	Palletizer* palletizer = GetPalletizer();
+	palletizer->SystemState=DOC_in["SystemState"].GetInt();
+
+	palletizer->XAxisSetting = DOC_in["XAxisSetting"].GetInt();
+	palletizer->YAxisSetting = DOC_in["YAxisSetting"].GetInt();
+	palletizer->ZAxisSetting = DOC_in["ZAxisSetting"].GetInt();
+	palletizer->WAxisSetting = DOC_in["WAxisSetting"].GetInt();
+
+	palletizer->FingerMovement = DOC_in["FingerMovement"].GetInt();
+	palletizer->OuterClawMovement = DOC_in["OuterClawMovement"].GetInt();
+	palletizer->LocationRollingOver = DOC_in["LocationRollingOver"].GetInt();
+
+	palletizer->TheSpeedOfXAxis = DOC_in["TheSpeedOfXAxis"].GetInt();
+	palletizer->TheSpeedOfYAxis = DOC_in["TheSpeedOfYAxis"].GetInt();
+	palletizer->TheSpeedOfZAxis = DOC_in["TheSpeedOfZAxis"].GetInt();
+	palletizer->TheSpeedOfWAxis = DOC_in["TheSpeedOfWAxis"].GetInt();
+
+	palletizer->OverRunAlarm = DOC_in["OverRunAlarm"].GetInt();
+	palletizer->HostComputerControlTheSpeedOfXAxis =
+			DOC_in["HostComputerControlTheSpeedOfXAxis"].GetInt();
+	palletizer->AlarmAndStop = DOC_in["AlarmAndStop"].GetInt();
+
+	palletizer->ManualControlOfScreen = DOC_in["ManualControlOfScreen"].GetInt();
+	palletizer->ManualControlTheXAxisOfTheScreen =
+			DOC_in["ManualControlTheXAxisOfTheScreen"].GetInt();
+	palletizer->ManualControlTheYAxisOfTheScreen =
+			DOC_in["ManualControlTheYAxisOfTheScreen"].GetInt();
+	palletizer->ManualControlTheZAxisOfTheScreen =
+			DOC_in["ManualControlTheZAxisOfTheScreen"].GetInt();
+	palletizer->ManualControlTheWAxisOfTheScreen =
+			DOC_in["ManualControlTheWAxisOfTheScreen"].GetInt();
+	palletizer->ManualControlTheFingerOfTheScreen =
+			DOC_in["ManualControlTheFingerOfTheScreen"].GetInt();
+	palletizer->ManualControlTheOuterClawOfTheScreen =
+			DOC_in["ManualControlTheOuterClawOfTheScreen"].GetInt();
+
+	palletizer->StorageBinFullA = DOC_in["StorageBinFullA"].GetInt();
+	palletizer->StorageBinFullB = DOC_in["StorageBinFullB"].GetInt();
+
+	palletizer->TheTimeOfTheOuterClawHalfOpen = DOC_in["TheTimeOfTheOuterClawHalfOpen"].GetInt();
+	palletizer->WipeDataOfTheChangeTileAndStorageBinFull =
+			DOC_in["WipeDataOfTheChangeTileAndStorageBinFull"].GetInt();
+	palletizer->NearALowSpeed = DOC_in["NearALowSpeed"].GetInt();
+	palletizer->TheNumberOfPackages = DOC_in["TheNumberOfPackages"].GetInt();
+
+	palletizer->TheHighestSpeedOfXAxis = DOC_in["TheHighestSpeedOfXAxis"].GetInt();
+	palletizer->DecelerationTimeOfXAxis = DOC_in["DecelerationTimeOfXAxis"].GetInt();
+	palletizer->DecelerationDistanceOfXAxis = DOC_in["DecelerationDistanceOfXAxis"].GetInt();
+	palletizer->NoLoadTimeOfXAxis = DOC_in["NoLoadTimeOfXAxis"].GetInt();
+	palletizer->NoLoadDistanceOfXAxis = DOC_in["NoLoadDistanceOfXAxis"].GetInt();
+	palletizer->ManualSpeedOfXAxis = DOC_in["ManualSpeedOfXAxis"].GetInt();
+
+	palletizer->TheHighestSpeedOfYAxis = DOC_in["TheHighestSpeedOfYAxis"].GetInt();
+	palletizer->DecelerationTimeOfYAxis = DOC_in["DecelerationTimeOfYAxis"].GetInt();
+	palletizer->DecelerationDistanceOfYAxis = DOC_in["DecelerationDistanceOfYAxis"].GetInt();
+	palletizer->NoLoadTimeOfYAxis = DOC_in["NoLoadTimeOfYAxis"].GetInt();
+	palletizer->NoLoadDistanceOfYAxis = DOC_in["NoLoadDistanceOfYAxis"].GetInt();
+	palletizer->ManualSpeedOfYAxis = DOC_in["ManualSpeedOfYAxis"].GetInt();
+
+	palletizer->TheHighestSpeedOfZAxis = DOC_in["TheHighestSpeedOfZAxis"].GetInt();
+	palletizer->DecelerationTimeOfZAxis = DOC_in["DecelerationTimeOfZAxis"].GetInt();
+	palletizer->DecelerationDistaceOfZAxis = DOC_in["DecelerationDistaceOfZAxis"].GetInt();
+	palletizer->ManualSpeedOfZAxis = DOC_in["ManualSpeedOfZAxis"].GetInt();
+
+	palletizer->TheAccuracyOfXAxis = DOC_in["TheAccuracyOfXAxis"].GetInt();
+	palletizer->TheAccuracyOfYAxis = DOC_in["TheAccuracyOfYAxis"].GetInt();
+	palletizer->TheAccuracyOfZAxis = DOC_in["TheAccuracyOfZAxis"].GetInt();
+	palletizer->TheAccuracyOfWAxis = DOC_in["TheAccuracyOfWAxis"].GetInt();
+
+	palletizer->CommunicationExchange = DOC_in["CommunicationExchange"].GetInt();
+
+	AnswerWriter->StartObject();			// Between StartObject()/EndObject(),
+
+	AnswerWriter->Key("command_ID");		// output a key,
+	AnswerWriter->String("PWDA");			// follow by a value.
+
+	AnswerWriter->Key("message");					// output a key,
+	AnswerWriter->String("PWDA RECEIVED");			// follow by a value.
+
+	AnswerWriter->EndObject();
+}
+
+
 std::string ProcessCommand(std::string Message)
 {
 	//one document for input
@@ -229,10 +316,12 @@ std::string ProcessCommand(std::string Message)
     DOC_in.Parse(Message.c_str());
     // 2. Modify it by DOM.
 
-    rapidjson::Value& command_ID = DOC_in["command_ID"];
+    rapidjson::Value& command_ID = DOC_in["command_ID"]; //An error here is *probably* because command_ID is missing
+
     try //Yup, it's dirty. But we don't want to risk that the machine stops working by a corrupt packet
     {
         if(boost::equals(command_ID.GetString(), "PGSI")) Process_PGSI(DOC_in, &writer);
+        else if(boost::equals(command_ID.GetString(), "PWDA")) Process_PWDA(DOC_in, &writer);
         else if(boost::equals(command_ID.GetString(), "PING")) Process_PING(DOC_in, &writer);
         else std::cout << "Unknown command: " << command_ID.GetString() << std::endl;
     }
@@ -249,3 +338,4 @@ void InitDisplayParser()
 {
 	SetFunctionToProcessMessages(&ProcessCommand);
 }
+

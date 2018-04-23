@@ -27,7 +27,7 @@ Palletizer::Palletizer()
 	//PC Read variables
 	//----------------------------------------
 	EmergencyStopOfElectricCabinet=0;
-	AutomaticSelectionSwithc=0;
+	AutomaticSelectionSwitch=0;
 	ManualSelectionSwitch=0;
 	StartSwitch=0;
 	StopSwitch=0;
@@ -211,7 +211,7 @@ int PerformGlobalReading(){
 
 	//S7_SetByteAt(Buffer,1,);
 	palletizer.EmergencyStopOfElectricCabinet = S7::GetBitAt(Buffer, 0, 0);
-	palletizer.AutomaticSelectionSwithc = S7::GetBitAt(Buffer, 0, 1);
+	palletizer.AutomaticSelectionSwitch = S7::GetBitAt(Buffer, 0, 1);
 	palletizer.ManualSelectionSwitch = S7::GetBitAt(Buffer, 0, 2);
 	palletizer.StartSwitch = S7::GetBitAt(Buffer, 0, 3);
 	palletizer.StopSwitch = S7::GetBitAt(Buffer, 0, 4);
@@ -387,3 +387,14 @@ int PerformGlobalWriting(){
 				Buffer);
 	    return res;
 }
+
+int SetManualModeMode()
+{
+
+
+
+}
+
+
+//First approach: the palletizer operates according to orders.
+//An order i
