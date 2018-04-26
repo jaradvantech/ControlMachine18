@@ -397,8 +397,8 @@ std::string ProcessCommand(std::string Message)
     rapidjson::StringBuffer Answer_JSON;
     rapidjson::Writer<rapidjson::StringBuffer> writer(Answer_JSON);
     DOC_in.Parse(Message.c_str());
-    // 2. Modify it by DOM.
 
+    // 2. Modify it by DOM.
     rapidjson::Value& command_ID = DOC_in["command_ID"]; //An error here is *probably* because command_ID is missing
 
     try //Yup, it's dirty. But we don't want to risk that the machine stops working by a corrupt packet
