@@ -3,7 +3,7 @@
 // Author      : Jose Andres Grau
 // Version     :
 // Copyright   : JARADVANTECH
-// Description : Hello World in C++, Ansi-style
+// Description :
 //============================================================================
 
 #include <iostream>

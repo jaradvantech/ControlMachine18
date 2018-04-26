@@ -28,8 +28,10 @@
 #include "SynchronizationPoints.h"
 #include <sstream>
 
-#define TRUE   1
-#define FALSE  0
+#define TRUE		1
+#define FALSE  		0
+#define BUFFER_SIZE 4098
+#define PORT		23623
 
 int KeepConnectionOpened = 1;
 
@@ -157,14 +159,14 @@ void CreateMasterSocket(int& master_socket, int opt,struct sockaddr_in& address)
 	//type of socket created
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = htons(23623);
-	//bind the socket to localhost port 23623
+	address.sin_port = htons(PORT);
+	//bind the socket to localhost port PORT
 	if (bind(master_socket, (struct sockaddr*) (&address), sizeof(address)) < 0)
 	{
 		perror("bind failed");
 		exit(EXIT_FAILURE);
 	}
-	printf("Listener on port %d \n", 23623);
+	printf("Listener on port %d \n", PORT);
 	//try to specify maximum of 3 pending connections for the master socket
 	if (listen(master_socket, 3) < 0)
 	{
@@ -196,7 +198,7 @@ void * OpenServer(void *Arg)
 
     struct sockaddr_in address;
     
-    char bufferRead[1025];  //data buffer of 1K
+    char bufferRead[BUFFER_SIZE];  //data buffer of 1K
     std::string bufferWrite;  //data buffer of 1K
 
     //set of socket descriptors
@@ -241,7 +243,7 @@ void * OpenServer(void *Arg)
             if (FD_ISSET(TCPClients.at(i).client_socket , &readfds))
             {
                 //read the incoming message
-            	valread = read( TCPClients.at(i).client_socket , bufferRead, 1024);
+            	valread = read( TCPClients.at(i).client_socket , bufferRead, BUFFER_SIZE);
             	//Check if it was for closing
                 if (valread==0)	ClientHasDisconnected(TCPClients.at(i).client_socket, addrlen, i, address, TCPClients);
                 else

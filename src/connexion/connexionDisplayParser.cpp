@@ -206,6 +206,7 @@ void Process_PGSI(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson
 
 	AnswerWriter->EndObject();
 }
+
 void Process_PING(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson::StringBuffer>* AnswerWriter)
 {
 	DOC_in.IsNull(); //removes a warning. I hate warnings.
@@ -306,9 +307,91 @@ void Process_PWDA(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson
 	AnswerWriter->EndObject();
 }
 
+void Process_CHAL(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson::StringBuffer>* AnswerWriter)
+{
+	DOC_in.IsNull(); //removes a warning. I hate warnings.
+	Palletizer* palletizer = GetPalletizer();
+
+	AnswerWriter->StartObject();			// Between StartObject()/EndObject(),
+
+	AnswerWriter->Key("command_ID");		// output a key,
+	AnswerWriter->String("CHAL");			// follow by a value.
+
+	/*Emergency Alarms*/
+ 	AnswerWriter->Key("EmergencyStopOfElectricCabinet");
+	AnswerWriter->Bool(palletizer->EmergencyStopOfElectricCabinet);
+ 	AnswerWriter->Key("FrameEmergencyStop");
+	AnswerWriter->Bool(palletizer->FrameEmergencyStop);
+
+	/*Mechanical Limits*/
+ 	AnswerWriter->Key("LimitProximitySwitchDetectionOfwAxis");
+	AnswerWriter->Bool(palletizer->LimitProximitySwitchDetectionOfwAxis);
+ 	AnswerWriter->Key("LimitProximitySwitchDetectionOfzAxis");
+	AnswerWriter->Bool(palletizer->LimitProximitySwitchDetectionOfzAxis);
+ 	AnswerWriter->Key("DetectionOfMechanicalLimitStrokeSwitchOfxAxis1");
+	AnswerWriter->Bool(palletizer->DetectionOfMechanicalLimitStrokeSwitchOfxAxis1);
+ 	AnswerWriter->Key("DetectionOfMechanicalLimitStrokeSwitchOfxAxis2");
+	AnswerWriter->Bool(palletizer->DetectionOfMechanicalLimitStrokeSwitchOfxAxis2);
+ 	AnswerWriter->Key("DetectionOfMechanicalLimitStrokeSwitchOfyAxis1");
+	AnswerWriter->Bool(palletizer->DetectionOfMechanicalLimitStrokeSwitchOfyAxis1);
+ 	AnswerWriter->Key("DetectionOfMechanicalLimitStrokeSwitchOfyAxis2");
+	AnswerWriter->Bool(palletizer->DetectionOfMechanicalLimitStrokeSwitchOfyAxis2);
+ 	AnswerWriter->Key("DetectionOfMechanicalLimitStrokeSwitchOfzAxis1");
+	AnswerWriter->Bool(palletizer->DetectionOfMechanicalLimitStrokeSwitchOfzAxis1);
+ 	AnswerWriter->Key("DetectionOfMechanicalLimitStrokeSwitchOfzAxis2");
+	AnswerWriter->Bool(palletizer->DetectionOfMechanicalLimitStrokeSwitchOfzAxis2);
+	AnswerWriter->Key("LimitOptoelectronicOfZAxis");
+	AnswerWriter->Int(palletizer->LimitOptoelectronicOfZAxis);
+
+	/*Miscellaneous Alarms*/
+ 	AnswerWriter->Key("FrequencyConverterAlarmOfxAxis");
+	AnswerWriter->Bool(palletizer->FrequencyConverterAlarmOfxAxis);
+ 	AnswerWriter->Key("FrequencyConverterAlarmOfyAxis");
+	AnswerWriter->Bool(palletizer->FrequencyConverterAlarmOfyAxis);
+ 	AnswerWriter->Key("FrequencyConverterAlarmOfzAxis");
+	AnswerWriter->Bool(palletizer->FrequencyConverterAlarmOfzAxis);
+ 	AnswerWriter->Key("FrequencyConverterAlarmOfwAxis");
+	AnswerWriter->Bool(palletizer->FrequencyConverterAlarmOfwAxis);
+ 	AnswerWriter->Key("TheAlarmOfBrickStorehouseDidNotClose1");
+	AnswerWriter->Bool(palletizer->TheAlarmOfBrickStorehouseDidNotClose1);
+ 	AnswerWriter->Key("TheAlarmOfBrickStorehouseDidNotClose2");
+	AnswerWriter->Bool(palletizer->TheAlarmOfBrickStorehouseDidNotClose2);
+
+	AnswerWriter->EndObject();
+}
+
+void Process_RPRV(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson::StringBuffer>* AnswerWriter)
+{
+	DOC_in.IsNull(); //removes a warning. I hate warnings.
+	Palletizer* palletizer = GetPalletizer();
+
+	AnswerWriter->StartObject();			// Between StartObject()/EndObject(),
+
+	AnswerWriter->Key("command_ID");		// output a key,
+	AnswerWriter->String("CHAL");			// follow by a value.
+
+ 	AnswerWriter->Key("RealTimeValueOfxAxis");
+	AnswerWriter->Bool(palletizer->RealTimeValueOfxAxis);
+ 	AnswerWriter->Key("RealTimeValueOfyAxis");
+	AnswerWriter->Bool(palletizer->RealTimeValueOfyAxis);
+ 	AnswerWriter->Key("RealTimeValueOfzAxis");
+	AnswerWriter->Bool(palletizer->RealTimeValueOfzAxis);
+ 	AnswerWriter->Key("RealTimeValueOfwAxis");
+	AnswerWriter->Bool(palletizer->RealTimeValueOfwAxis);
+
+	/*Ya veremos como hacemos esto*/
+	int currentStep;
+	int totalSteps;
+
+ 	AnswerWriter->Key("currentStep");
+	AnswerWriter->Int(currentStep);
+ 	AnswerWriter->Key("totalSteps");
+	AnswerWriter->Int(totalSteps);
+}
 
 std::string ProcessCommand(std::string Message)
 {
+	std::cout << Message << std::endl;
 	//one document for input
     rapidjson::Document DOC_in;
     rapidjson::StringBuffer Answer_JSON;
@@ -320,9 +403,11 @@ std::string ProcessCommand(std::string Message)
 
     try //Yup, it's dirty. But we don't want to risk that the machine stops working by a corrupt packet
     {
-        if(boost::equals(command_ID.GetString(), "PGSI")) Process_PGSI(DOC_in, &writer);
+        	 if(boost::equals(command_ID.GetString(), "PGSI")) Process_PGSI(DOC_in, &writer);
         else if(boost::equals(command_ID.GetString(), "PWDA")) Process_PWDA(DOC_in, &writer);
         else if(boost::equals(command_ID.GetString(), "PING")) Process_PING(DOC_in, &writer);
+        else if(boost::equals(command_ID.GetString(), "CHAL")) Process_CHAL(DOC_in, &writer);
+        else if(boost::equals(command_ID.GetString(), "RPRV")) Process_RPRV(DOC_in, &writer);
         else std::cout << "Unknown command: " << command_ID.GetString() << std::endl;
     }
     catch( ... )
