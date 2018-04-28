@@ -31,15 +31,16 @@ void init()
 
 	palletizerConfigInfo.IODBWriting=2;
 	palletizerConfigInfo.WritingStartByte=0;
-	palletizerConfigInfo.WritingLength=220;
+	palletizerConfigInfo.WritingLength=196;
 
 	GetPalletizer()->SetPalletizerConfig(palletizerConfigInfo);
 	//--------------------------------------------------------------------
 	// CONFIGURE PLCs
 	//--------------------------------------------------------------------
-	//Synchro::IncreaseSynchronizationPointValue(0);
-	//pthread_create(&PLCThread, NULL, PLCAdquisitionLoop, (void *) 0);
-	//while (Synchro::GetSynchronizationPointValue(0) != 0)	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	Synchro::IncreaseSynchronizationPointValue(0);
+	StartUpPLC();
+	pthread_create(&PLCThread, NULL, PLCAdquisitionLoop, (void *) 0);
+	while (Synchro::GetSynchronizationPointValue(0) != 0)	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	//--------------------------------------------------------------------
 	// OPEN DISPLAY COMMUNICATIONS
 	//--------------------------------------------------------------------
