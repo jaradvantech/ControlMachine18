@@ -13,7 +13,7 @@
 
 
 
-
+bool StartUpPLC();
 void * PLCAdquisitionLoop(void *Arg);
 TS7Client* GetPLC18();
 

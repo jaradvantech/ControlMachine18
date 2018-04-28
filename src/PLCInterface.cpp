@@ -21,7 +21,18 @@ struct StructInfoPlc {
 
 
 TS7Client PLC18;
-StructInfoPlc InfoPlc14;
+StructInfoPlc InfoPlc18;
+
+void SetConfigPLC(StructInfoPlc _InfoPlc)
+{
+	InfoPlc18=_InfoPlc;
+}
+void SetConfigPLC(std::string _PlcAddress, int _PlcRack, int _PlcSlot)
+{
+	InfoPlc18.PlcAddress = _PlcAddress.c_str();
+	InfoPlc18.PlcRack = _PlcRack;
+	InfoPlc18.PlcSlot = _PlcSlot;
+}
 
 bool Check(TS7Client *Client, int Result, const char * function){
     printf("\n");
@@ -42,6 +53,18 @@ bool Check(TS7Client *Client, int Result, const char * function){
     }
     return Result==0;
 }
+
+bool CliConnectPLC(TS7Client *Client){
+
+    int res = Client->ConnectTo(InfoPlc18.PlcAddress,InfoPlc18.PlcRack,InfoPlc18.PlcSlot);
+    if (Check(Client, res, "UNIT Connection")) {
+          printf("  Connected to   : %s (Rack=%d, Slot=%d)\n",InfoPlc18.PlcAddress,InfoPlc18.PlcRack,InfoPlc18.PlcSlot);
+          printf("  PDU Requested  : %d bytes\n",Client->PDURequested());
+          printf("  PDU Negotiated : %d bytes\n",Client->PDULength());
+    }
+    return res==0;
+}
+
 bool CliConnectPLC(TS7Client *Client, StructInfoPlc Config){
 
     int res = Client->ConnectTo(Config.PlcAddress,Config.PlcRack,Config.PlcSlot);
@@ -52,6 +75,13 @@ bool CliConnectPLC(TS7Client *Client, StructInfoPlc Config){
     }
     return res==0;
 }
+
+bool StartUpPLC()
+{
+	SetConfigPLC("192.168.0.199",0,1);
+	return CliConnectPLC(&PLC18);
+}
+
 void CliDisconnectPLC(TS7Client *Client){
      Client->Disconnect();
 }
@@ -65,7 +95,7 @@ void AttemptReconnection(void)
 	//Wait for a couple of seconds before reconnecting
 	sleep(2);
 
-	CliConnectPLC(&PLC18, InfoPlc14);
+	CliConnectPLC(&PLC18, InfoPlc18);
 }
 
 
