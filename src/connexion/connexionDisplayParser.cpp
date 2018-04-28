@@ -221,80 +221,119 @@ void Process_PING(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson
 	AnswerWriter->EndObject();
 }
 
-void Process_PWDA(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson::StringBuffer>* AnswerWriter)
+void Process_PWDA(const std::string& CMD_from_tablet, const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson::StringBuffer>* AnswerWriter)
 {
-	//rapidjson::Value& s = DOC_in["casa"];
-	//s.GetInt();
 	Palletizer* palletizer = GetPalletizer();
-	palletizer->SystemState=DOC_in["SystemState"].GetInt();
 
-	palletizer->XAxisSetting = DOC_in["XAxisSetting"].GetInt();
-	palletizer->YAxisSetting = DOC_in["YAxisSetting"].GetInt();
-	palletizer->ZAxisSetting = DOC_in["ZAxisSetting"].GetInt();
-	palletizer->WAxisSetting = DOC_in["WAxisSetting"].GetInt();
+	if(boost::contains(CMD_from_tablet, "SystemState"))
+		palletizer->SystemState=DOC_in["SystemState"].GetInt();
+	if(boost::contains(CMD_from_tablet, "XAxisSetting"))
+		palletizer->XAxisSetting = DOC_in["XAxisSetting"].GetInt();
+	if(boost::contains(CMD_from_tablet, "YAxisSetting"))
+		palletizer->YAxisSetting = DOC_in["YAxisSetting"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ZAxisSetting"))
+		palletizer->ZAxisSetting = DOC_in["ZAxisSetting"].GetInt();
+	if(boost::contains(CMD_from_tablet, "WAxisSetting"))
+		palletizer->WAxisSetting = DOC_in["WAxisSetting"].GetInt();
 
-	palletizer->FingerMovement = DOC_in["FingerMovement"].GetInt();
-	palletizer->OuterClawMovement = DOC_in["OuterClawMovement"].GetInt();
-	palletizer->LocationRollingOver = DOC_in["LocationRollingOver"].GetInt();
+	if(boost::contains(CMD_from_tablet, "FingerMovement"))
+		palletizer->FingerMovement = DOC_in["FingerMovement"].GetInt();
+	if(boost::contains(CMD_from_tablet, "OuterClawMovement"))
+		palletizer->OuterClawMovement = DOC_in["OuterClawMovement"].GetInt();
+	if(boost::contains(CMD_from_tablet, "LocationRollingOver"))
+		palletizer->LocationRollingOver = DOC_in["LocationRollingOver"].GetInt();
 
-	palletizer->TheSpeedOfXAxis = DOC_in["TheSpeedOfXAxis"].GetInt();
-	palletizer->TheSpeedOfYAxis = DOC_in["TheSpeedOfYAxis"].GetInt();
-	palletizer->TheSpeedOfZAxis = DOC_in["TheSpeedOfZAxis"].GetInt();
-	palletizer->TheSpeedOfWAxis = DOC_in["TheSpeedOfWAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheSpeedOfXAxis"))
+		palletizer->TheSpeedOfXAxis = DOC_in["TheSpeedOfXAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheSpeedOfYAxis"))
+		palletizer->TheSpeedOfYAxis = DOC_in["TheSpeedOfYAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheSpeedOfZAxis"))
+		palletizer->TheSpeedOfZAxis = DOC_in["TheSpeedOfZAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheSpeedOfWAxis"))
+		palletizer->TheSpeedOfWAxis = DOC_in["TheSpeedOfWAxis"].GetInt();
 
-	palletizer->OverRunAlarm = DOC_in["OverRunAlarm"].GetInt();
-	palletizer->HostComputerControlTheSpeedOfXAxis =
-			DOC_in["HostComputerControlTheSpeedOfXAxis"].GetInt();
-	palletizer->AlarmAndStop = DOC_in["AlarmAndStop"].GetInt();
+	if(boost::contains(CMD_from_tablet, "OverRunAlarm"))
+		palletizer->OverRunAlarm = DOC_in["OverRunAlarm"].GetInt();
+	if(boost::contains(CMD_from_tablet, "HostComputerControlTheSpeedOfXAxis"))
+		palletizer->HostComputerControlTheSpeedOfXAxis = DOC_in["HostComputerControlTheSpeedOfXAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "AlarmAndStop"))
+		palletizer->AlarmAndStop = DOC_in["AlarmAndStop"].GetInt();
 
-	palletizer->ManualControlOfScreen = DOC_in["ManualControlOfScreen"].GetInt();
-	palletizer->ManualControlTheXAxisOfTheScreen =
-			DOC_in["ManualControlTheXAxisOfTheScreen"].GetInt();
-	palletizer->ManualControlTheYAxisOfTheScreen =
-			DOC_in["ManualControlTheYAxisOfTheScreen"].GetInt();
-	palletizer->ManualControlTheZAxisOfTheScreen =
-			DOC_in["ManualControlTheZAxisOfTheScreen"].GetInt();
-	palletizer->ManualControlTheWAxisOfTheScreen =
-			DOC_in["ManualControlTheWAxisOfTheScreen"].GetInt();
-	palletizer->ManualControlTheFingerOfTheScreen =
-			DOC_in["ManualControlTheFingerOfTheScreen"].GetInt();
-	palletizer->ManualControlTheOuterClawOfTheScreen =
-			DOC_in["ManualControlTheOuterClawOfTheScreen"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualControlOfScreen"))
+		palletizer->ManualControlOfScreen = DOC_in["ManualControlOfScreen"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualControlTheXAxisOfTheScreen"))
+		palletizer->ManualControlTheXAxisOfTheScreen = DOC_in["ManualControlTheXAxisOfTheScreen"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualControlTheYAxisOfTheScreen"))
+		palletizer->ManualControlTheYAxisOfTheScreen = DOC_in["ManualControlTheYAxisOfTheScreen"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualControlTheZAxisOfTheScreen"))
+		palletizer->ManualControlTheZAxisOfTheScreen = DOC_in["ManualControlTheZAxisOfTheScreen"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualControlTheWAxisOfTheScreen"))
+		palletizer->ManualControlTheWAxisOfTheScreen = DOC_in["ManualControlTheWAxisOfTheScreen"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualControlTheFingerOfTheScreen"))
+		palletizer->ManualControlTheFingerOfTheScreen = DOC_in["ManualControlTheFingerOfTheScreen"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualControlTheOuterClawOfTheScreen"))
+		palletizer->ManualControlTheOuterClawOfTheScreen = DOC_in["ManualControlTheOuterClawOfTheScreen"].GetInt();
 
-	palletizer->StorageBinFullA = DOC_in["StorageBinFullA"].GetInt();
-	palletizer->StorageBinFullB = DOC_in["StorageBinFullB"].GetInt();
+	if(boost::contains(CMD_from_tablet, "StorageBinFullA"))
+		palletizer->StorageBinFullA = DOC_in["StorageBinFullA"].GetInt();
+	if(boost::contains(CMD_from_tablet, "StorageBinFullB"))
+		palletizer->StorageBinFullB = DOC_in["StorageBinFullB"].GetInt();
 
-	palletizer->TheTimeOfTheOuterClawHalfOpen = DOC_in["TheTimeOfTheOuterClawHalfOpen"].GetInt();
-	palletizer->WipeDataOfTheChangeTileAndStorageBinFull =
-			DOC_in["WipeDataOfTheChangeTileAndStorageBinFull"].GetInt();
-	palletizer->NearALowSpeed = DOC_in["NearALowSpeed"].GetInt();
-	palletizer->TheNumberOfPackages = DOC_in["TheNumberOfPackages"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheTimeOfTheOuterClawHalfOpen"))
+		palletizer->TheTimeOfTheOuterClawHalfOpen = DOC_in["TheTimeOfTheOuterClawHalfOpen"].GetInt();
+	if(boost::contains(CMD_from_tablet, "WipeDataOfTheChangeTileAndStorageBinFull"))
+		palletizer->WipeDataOfTheChangeTileAndStorageBinFull = DOC_in["WipeDataOfTheChangeTileAndStorageBinFull"].GetInt();
+	if(boost::contains(CMD_from_tablet, "NearALowSpeed"))
+		palletizer->NearALowSpeed = DOC_in["NearALowSpeed"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheNumberOfPackages"))
+		palletizer->TheNumberOfPackages = DOC_in["TheNumberOfPackages"].GetInt();
 
-	palletizer->TheHighestSpeedOfXAxis = DOC_in["TheHighestSpeedOfXAxis"].GetInt();
-	palletizer->DecelerationTimeOfXAxis = DOC_in["DecelerationTimeOfXAxis"].GetInt();
-	palletizer->DecelerationDistanceOfXAxis = DOC_in["DecelerationDistanceOfXAxis"].GetInt();
-	palletizer->NoLoadTimeOfXAxis = DOC_in["NoLoadTimeOfXAxis"].GetInt();
-	palletizer->NoLoadDistanceOfXAxis = DOC_in["NoLoadDistanceOfXAxis"].GetInt();
-	palletizer->ManualSpeedOfXAxis = DOC_in["ManualSpeedOfXAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheHighestSpeedOfXAxis"))
+		palletizer->TheHighestSpeedOfXAxis = DOC_in["TheHighestSpeedOfXAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "DecelerationTimeOfXAxis"))
+		palletizer->DecelerationTimeOfXAxis = DOC_in["DecelerationTimeOfXAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "DecelerationDistanceOfXAxis"))
+		palletizer->DecelerationDistanceOfXAxis = DOC_in["DecelerationDistanceOfXAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "NoLoadTimeOfXAxis"))
+		palletizer->NoLoadTimeOfXAxis = DOC_in["NoLoadTimeOfXAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "NoLoadDistanceOfXAxis"))
+		palletizer->NoLoadDistanceOfXAxis = DOC_in["NoLoadDistanceOfXAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualSpeedOfXAxis"))
+		palletizer->ManualSpeedOfXAxis = DOC_in["ManualSpeedOfXAxis"].GetInt();
 
-	palletizer->TheHighestSpeedOfYAxis = DOC_in["TheHighestSpeedOfYAxis"].GetInt();
-	palletizer->DecelerationTimeOfYAxis = DOC_in["DecelerationTimeOfYAxis"].GetInt();
-	palletizer->DecelerationDistanceOfYAxis = DOC_in["DecelerationDistanceOfYAxis"].GetInt();
-	palletizer->NoLoadTimeOfYAxis = DOC_in["NoLoadTimeOfYAxis"].GetInt();
-	palletizer->NoLoadDistanceOfYAxis = DOC_in["NoLoadDistanceOfYAxis"].GetInt();
-	palletizer->ManualSpeedOfYAxis = DOC_in["ManualSpeedOfYAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheHighestSpeedOfYAxis"))
+		palletizer->TheHighestSpeedOfYAxis = DOC_in["TheHighestSpeedOfYAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "DecelerationTimeOfYAxis"))
+		palletizer->DecelerationTimeOfYAxis = DOC_in["DecelerationTimeOfYAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "DecelerationDistanceOfYAxis"))
+		palletizer->DecelerationDistanceOfYAxis = DOC_in["DecelerationDistanceOfYAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "NoLoadTimeOfYAxis"))
+		palletizer->NoLoadTimeOfYAxis = DOC_in["NoLoadTimeOfYAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "NoLoadDistanceOfYAxis"))
+		palletizer->NoLoadDistanceOfYAxis = DOC_in["NoLoadDistanceOfYAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualSpeedOfYAxis"))
+		palletizer->ManualSpeedOfYAxis = DOC_in["ManualSpeedOfYAxis"].GetInt();
 
-	palletizer->TheHighestSpeedOfZAxis = DOC_in["TheHighestSpeedOfZAxis"].GetInt();
-	palletizer->DecelerationTimeOfZAxis = DOC_in["DecelerationTimeOfZAxis"].GetInt();
-	palletizer->DecelerationDistaceOfZAxis = DOC_in["DecelerationDistaceOfZAxis"].GetInt();
-	palletizer->ManualSpeedOfZAxis = DOC_in["ManualSpeedOfZAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheHighestSpeedOfZAxis"))
+		palletizer->TheHighestSpeedOfZAxis = DOC_in["TheHighestSpeedOfZAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "DecelerationTimeOfZAxis"))
+		palletizer->DecelerationTimeOfZAxis = DOC_in["DecelerationTimeOfZAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "DecelerationDistaceOfZAxis"))
+		palletizer->DecelerationDistaceOfZAxis = DOC_in["DecelerationDistaceOfZAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "ManualSpeedOfZAxis"))
+		palletizer->ManualSpeedOfZAxis = DOC_in["ManualSpeedOfZAxis"].GetInt();
 
-	palletizer->TheAccuracyOfXAxis = DOC_in["TheAccuracyOfXAxis"].GetInt();
-	palletizer->TheAccuracyOfYAxis = DOC_in["TheAccuracyOfYAxis"].GetInt();
-	palletizer->TheAccuracyOfZAxis = DOC_in["TheAccuracyOfZAxis"].GetInt();
-	palletizer->TheAccuracyOfWAxis = DOC_in["TheAccuracyOfWAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheAccuracyOfXAxis"))
+		palletizer->TheAccuracyOfXAxis = DOC_in["TheAccuracyOfXAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheAccuracyOfYAxis"))
+		palletizer->TheAccuracyOfYAxis = DOC_in["TheAccuracyOfYAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheAccuracyOfZAxis"))
+		palletizer->TheAccuracyOfZAxis = DOC_in["TheAccuracyOfZAxis"].GetInt();
+	if(boost::contains(CMD_from_tablet, "TheAccuracyOfWAxis"))
+		palletizer->TheAccuracyOfWAxis = DOC_in["TheAccuracyOfWAxis"].GetInt();
 
-	palletizer->CommunicationExchange = DOC_in["CommunicationExchange"].GetInt();
+	if(boost::contains(CMD_from_tablet, "CommunicationExchange"))
+		palletizer->CommunicationExchange = DOC_in["CommunicationExchange"].GetInt();
 
 	AnswerWriter->StartObject();			// Between StartObject()/EndObject(),
 
@@ -403,8 +442,8 @@ std::string ProcessCommand(std::string Message)
 
     try //Yup, it's dirty. But we don't want to risk that the machine stops working by a corrupt packet
     {
-        	 if(boost::equals(command_ID.GetString(), "PGSI")) Process_PGSI(DOC_in, &writer);
-        else if(boost::equals(command_ID.GetString(), "PWDA")) Process_PWDA(DOC_in, &writer);
+        if(boost::equals(command_ID.GetString(), "PWDA")) Process_PWDA(Message, DOC_in, &writer);
+        else if(boost::equals(command_ID.GetString(), "PGSI")) Process_PGSI(DOC_in, &writer);
         else if(boost::equals(command_ID.GetString(), "PING")) Process_PING(DOC_in, &writer);
         else if(boost::equals(command_ID.GetString(), "CHAL")) Process_CHAL(DOC_in, &writer);
         else if(boost::equals(command_ID.GetString(), "RPRV")) Process_RPRV(DOC_in, &writer);
