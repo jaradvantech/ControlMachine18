@@ -184,6 +184,13 @@ class Palletizer
 	int DecelerationDistaceOfZAxis;
 	int ManualSpeedOfZAxis;
 
+	int TheHighestSpeedOfWAxis;
+	int DecelerationTimeOfWAxis;
+	int DecelerationDistanceOfWAxis;
+	int NoLoadTimeOfWAxis;
+	int NoLoadDistanceOfWAxis;
+	int ManualSpeedOfWAxis;
+
 	int TheAccuracyOfXAxis;
 	int TheAccuracyOfYAxis;
 	int TheAccuracyOfZAxis;

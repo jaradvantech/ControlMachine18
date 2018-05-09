@@ -259,15 +259,22 @@ void * OpenServer(void *Arg)
 
                 	while(std::getline(BufferToParse, bufferRead_Line))
                 	{
-                		std::cout<<"Casa"<<std::endl;
+                		//std::cout<<"Casa"<<std::endl;
                 		if(bufferRead_Line.size()>3)
                 		{
-                			std::cout<<bufferRead_Line.capacity()<<std::endl;
+                			//std::cout<<bufferRead_Line.capacity()<<std::endl;
                 			//std::string bufferRead_Line2 = bufferRead_Line;
 
         					//PROCESS MESSAGE
         					if(FunctionToProcessMessages==nullptr)bufferWrite=bufferRead_Line;
         					else bufferWrite=FunctionToProcessMessages(bufferRead_Line);
+        					//std::cout<<
+        					if(!boost::contains(bufferRead_Line, "PING") &&
+        					   !boost::contains(bufferRead_Line, "CHAL")
+        					){
+            					std::cout << "Received  :  " << bufferRead_Line << std::endl;
+            					std::cout << "Sent back :  " << bufferWrite << std::endl;
+        					}
 
         					send(TCPClients.at(i).client_socket , bufferWrite.c_str() , strlen( bufferWrite.c_str() ) , 0 );
         					bufferWrite="";

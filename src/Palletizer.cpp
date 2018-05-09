@@ -120,12 +120,12 @@ Palletizer::Palletizer()
 	//----------------------------------------
 	//PC Write variables
 	//----------------------------------------
-	SystemState=0; //1:Run 2:Wait
+	SystemState=1; //1:Run 2:Wait
 
-	XAxisSetting=0;//X axis
-	YAxisSetting=0;//X axis
-	ZAxisSetting=0;//X axis
-	WAxisSetting=0;//X axis
+	XAxisSetting=2000;//X axis
+	YAxisSetting=10897;//X axis
+	ZAxisSetting=3500;//X axis
+	WAxisSetting=1216;//X axis
 
 	FingerMovement=0; 	//Clip the tile 1.Open 2.Half open 3.Closed
 	OuterClawMovement=0;	//OuterClaw 1.Open 2.Half open 3.Closed
@@ -151,34 +151,41 @@ Palletizer::Palletizer()
 	StorageBinFullA=0;							//1.Turn OFF 2. Torn ON
 	StorageBinFullB=0;							//1.Turn OFF 2. Torn ON
 
-	TheTimeOfTheOuterClawHalfOpen=0;
+	TheTimeOfTheOuterClawHalfOpen=10;
 	WipeDataOfTheChangeTileAndStorageBinFull=0;	//Clear the last grab
 	NearALowSpeed=0;								//1.Near a low speed 0. Go through the pulse value
 	TheNumberOfPackages=0;						//Exchange data bits
 
-	TheHighestSpeedOfXAxis=0;
-	DecelerationTimeOfXAxis=0;
-	DecelerationDistanceOfXAxis=0;
-	NoLoadTimeOfXAxis=0;
-	NoLoadDistanceOfXAxis=0;
-	ManualSpeedOfXAxis=0;
+	TheHighestSpeedOfXAxis=1400;
+	DecelerationTimeOfXAxis=2500;
+	DecelerationDistanceOfXAxis=300;
+	NoLoadTimeOfXAxis=2500;
+	NoLoadDistanceOfXAxis=300;
+	ManualSpeedOfXAxis=150;
 
-	TheHighestSpeedOfYAxis=0;
-	DecelerationTimeOfYAxis=0;
-	DecelerationDistanceOfYAxis=0;
-	NoLoadTimeOfYAxis=0;
-	NoLoadDistanceOfYAxis=0;
-	ManualSpeedOfYAxis=0;
+	TheHighestSpeedOfYAxis=1400;
+	DecelerationTimeOfYAxis=2000;
+	DecelerationDistanceOfYAxis=300;
+	NoLoadTimeOfYAxis=2000;
+	NoLoadDistanceOfYAxis=300;
+	ManualSpeedOfYAxis=150;
 
 	TheHighestSpeedOfZAxis=0;
 	DecelerationTimeOfZAxis=0;
 	DecelerationDistaceOfZAxis=0;
 	ManualSpeedOfZAxis=0;
 
-	TheAccuracyOfXAxis=0;
-	TheAccuracyOfYAxis=0;
-	TheAccuracyOfZAxis=0;
-	TheAccuracyOfWAxis=0;
+	TheHighestSpeedOfWAxis=600;
+	DecelerationTimeOfWAxis=400;
+	DecelerationDistanceOfWAxis=250;
+	NoLoadTimeOfWAxis=150;
+	NoLoadDistanceOfWAxis=100;
+	ManualSpeedOfWAxis=70;
+
+	TheAccuracyOfXAxis=50;
+	TheAccuracyOfYAxis=50;
+	TheAccuracyOfZAxis=50;
+	TheAccuracyOfWAxis=50;
 
 	CommunicationExchange=0;
 	//-----------------------------------------------
@@ -367,6 +374,13 @@ int PerformGlobalWriting(){
 	S7::SetDIntAt(Buffer,98,palletizer.DecelerationTimeOfZAxis);
 	S7::SetDIntAt(Buffer,102,palletizer.DecelerationDistaceOfZAxis);
 	S7::SetDIntAt(Buffer,114,palletizer.ManualSpeedOfZAxis);
+
+	S7::SetDIntAt(Buffer,118,palletizer.TheHighestSpeedOfWAxis);
+	S7::SetDIntAt(Buffer,122,palletizer.DecelerationTimeOfWAxis);
+	S7::SetDIntAt(Buffer,126,palletizer.DecelerationDistanceOfWAxis);
+	S7::SetDIntAt(Buffer,130,palletizer.NoLoadTimeOfWAxis);
+	S7::SetDIntAt(Buffer,134,palletizer.NoLoadDistanceOfWAxis);
+	S7::SetDIntAt(Buffer,138,palletizer.ManualSpeedOfWAxis);
 
 	S7::SetDIntAt(Buffer,142,palletizer.TheAccuracyOfXAxis);
 	S7::SetDIntAt(Buffer,146,palletizer.TheAccuracyOfYAxis);
