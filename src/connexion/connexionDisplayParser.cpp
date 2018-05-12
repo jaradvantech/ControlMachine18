@@ -424,8 +424,8 @@ void Process_RPRV(const rapidjson::Document& DOC_in, rapidjson::Writer<rapidjson
 	AnswerWriter->Bool(palletizer->RealTimeValueOfwAxis);
 
 	/*Ya veremos como hacemos esto*/
-	int currentStep;
-	int totalSteps;
+	int currentStep=0;
+	int totalSteps=0;
 
  	AnswerWriter->Key("currentStep");
 	AnswerWriter->Int(currentStep);
