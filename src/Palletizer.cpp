@@ -12,7 +12,7 @@
 #include <stdint.h>
 
 
-Palletizer palletizer;
+static Palletizer palletizer;
 
 Palletizer::Palletizer()
 {
