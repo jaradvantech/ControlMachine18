@@ -8,17 +8,13 @@
 #include "Algorithm.h"
 #include <SynchronizationPoints.h>
 #include <Palletizer.h>
+#include <deque>
 
 /*						DATA STRUCTURES USED						*/
 
-//So, we can have a class "PalletPlace"
-//Every PalletPlace will have private pointers to the required PLC Interface variables, all the exchange will be done via getters and setters.
-//Every PalletPlace will have a private deque of vectors with the coordinates to palletize. Getters and setters also for this.
-//Every PalletPlace will keep track of the actual step where he is.
 
-//So we have an arbitrary amount of PalletPlace, arranged in a vector.
 
-//In the constructor we could make the mapping between the private pointers to the PLC Interface Variables.
+
 //The c++ program won't provide with a default vector of coordinates to palletize.
 
 /*						FUNCTIONS USED						*/
@@ -60,7 +56,20 @@
 
 //TODO: It will be cool if we could set different areas in a pallet that can be palletized independently to allow us in the future to mix boxes.
 //Cool but I don't see this as consistently useful.
+struct MovementVector{
+	int x=0;
+	int y=0;
+	int z=0;
+	int w=0;
 
+	friend MovementVector operator+ (MovementVector lhs, const MovementVector & rhs){
+		lhs.x+=rhs.x;
+		lhs.y+=rhs.y;
+		lhs.z+=rhs.z;
+		lhs.w+=rhs.w;
+		return lhs;
+	}
+};
 
 class JAGMbool{
 	public:
@@ -95,9 +104,82 @@ class JAGMbool{
 	bool Trigger(){
 		return (previousValue != value);
 	}
+};
+
+class ManipulatorGeneral{
+	public:
+	MovementVector Working_Position;
+
+	MovementVector PalletStack_PositionUP;
+	MovementVector PalletStack_PositionDOWN;
+
+	MovementVector PalletA_PositionUP;
+	MovementVector PalletB_PositionUP;
+
+	MovementVector PalletA_PositionDOWN;
+	MovementVector PalletB_PositionDOWN;
+
+	MovementVector GrabBoxes_PositionUP;
+	MovementVector GrabBoxes_PositionDOWN;
+
 
 
 };
+
+class PalletPlace{
+	struct MovementVectorContainer{
+		MovementVector LandingPosition;
+		MovementVector DisplacedPosition;
+	};
+	typedef std::vector<MovementVectorContainer> Receipe; //The first elem
+	typedef std::deque<Receipe> Orders;
+	private:
+	Orders ListOfPalletsTodo;
+	int actualPosition=0;
+	bool PalletReady=0;
+	public:
+
+	void SetConfigurationForNextPallet(Receipe receipe){
+		if(ListOfPalletsTodo.size()<=1){
+			ListOfPalletsTodo.push_back(receipe);
+		}
+		else if(ListOfPalletsTodo.size()>1){
+			ListOfPalletsTodo.pop_back();
+			ListOfPalletsTodo.push_back(receipe);
+		}
+	}
+
+	MovementVectorContainer GetNextBoxPosition(){
+		MovementVectorContainer nextBox = ListOfPalletsTodo.at(0).at(actualPosition);
+		actualPosition++;
+		if(actualPosition==ListOfPalletsTodo.at(0).size()){
+			PalletFinished();
+		}
+		return nextBox;
+	}
+	MovementVectorContainer GetActualBoxPosition(){
+		return ListOfPalletsTodo.at(0).at(actualPosition);
+	}
+
+	void PalletFinished(){
+		if(ListOfPalletsTodo.size()>0){
+			ListOfPalletsTodo.push_back(ListOfPalletsTodo.at(ListOfPalletsTodo.size()-1));
+			ListOfPalletsTodo.pop_front();
+			actualPosition=0;
+		}
+	}
+
+	bool isPalletReady() const
+	{
+		return PalletReady;
+	}
+	void setPalletReady(bool palletReady)
+	{
+		PalletReady = palletReady;
+	}
+
+};
+
 
 
 JAGMbool FirstCycle=true;
@@ -184,6 +266,11 @@ JAGMbool T1_10__0_11=false;
 
 
 static Palletizer* palletizer = GetPalletizer();
+
+ManipulatorGeneral manipulator;
+PalletPlace palletA;
+PalletPlace palletB;
+
 void PerformMovement(int x, int y, int z, int w){
 	palletizer->XAxisSetting=x;
 	palletizer->YAxisSetting=y;
@@ -191,12 +278,6 @@ void PerformMovement(int x, int y, int z, int w){
 	palletizer->WAxisSetting=w;
 }
 
-struct MovementVector{
-	int x;
-	int y;
-	int z;
-	int w;
-};
 void PerformMovement(MovementVector _movement){
 	palletizer->XAxisSetting=_movement.x;
 	palletizer->YAxisSetting=_movement.y;
@@ -316,6 +397,17 @@ void ProcessStatesGrabBrick()
 bool ManipulatorArrived(MovementVector Destination)
 {
 	//This function checks if the actual position matches the position that was set for the manipulator, within a certain range.
+	float MarginUP=1.05;
+	float MarginDOWN=0.95;
+	if(Destination.x>palletizer->RealTimeValueOfxAxis*MarginUP ||
+	   Destination.x<palletizer->RealTimeValueOfxAxis*MarginDOWN) return false;
+	if(Destination.y>palletizer->RealTimeValueOfyAxis*MarginUP ||
+	   Destination.y<palletizer->RealTimeValueOfyAxis*MarginDOWN) return false;
+	if(Destination.z>palletizer->RealTimeValueOfzAxis*MarginUP ||
+	   Destination.z<palletizer->RealTimeValueOfzAxis*MarginDOWN) return false;
+	if(Destination.w>palletizer->RealTimeValueOfwAxis*MarginUP ||
+	   Destination.w<palletizer->RealTimeValueOfwAxis*MarginDOWN) return false;
+	return true;
 }
 
 
@@ -374,7 +466,7 @@ void* AlgorithmLoop(void *Arg)
 		ProcessStatesGrabBrick();
 		//Process transitions of General mission
 		T0__1=(1==palletizer->OverTurnTable) && (1==palletizer->PLCSystemState) ;
-		T1__2=false; //Arrived
+		T1__2=ManipulatorArrived(manipulator.Working_Position); //Arrived
 		T2__3=(2==palletizer->LocationRollingOverState) && (2==palletizer->OverTurnTable);
 		T2__4=(1==palletizer->LocationRollingOverState) && (1==palletizer->OverTurnTable);
 		T3__2=(2==palletizer->StorageBinOfPalletState);
@@ -391,30 +483,30 @@ void* AlgorithmLoop(void *Arg)
 
 		//Process transitions of Grab pallet
 		T0_0__0_1=P5.TriggerUP() || P8.TriggerUP();
-		T0_1__0_2=false; //arrived
+		T0_1__0_2=ManipulatorArrived(manipulator.Working_Position); //arrived
 		T0_2__0_3=(2==palletizer->FingerState) && (1==palletizer->InnerFingerState);
-		T0_3__0_4=false; //arrived
-		T0_4__0_5=false; //arrived
+		T0_3__0_4=ManipulatorArrived(manipulator.PalletStack_PositionUP); //arrived
+		T0_4__0_5=ManipulatorArrived(manipulator.PalletStack_PositionDOWN); //arrived
 		T0_5__0_6=(2==palletizer->FingerState);
-		T0_6__0_7=false; //arrived
-		T0_7__0_8=false; //arrived
-		T0_8__0_9=false; //arrived
+		T0_6__0_7=ManipulatorArrived(manipulator.PalletStack_PositionUP); //arrived
+		T0_7__0_8=ManipulatorArrived(manipulator.PalletA_PositionUP) || ManipulatorArrived(manipulator.PalletB_PositionUP); //arrived
+		T0_8__0_9=ManipulatorArrived(manipulator.PalletA_PositionDOWN) || ManipulatorArrived(manipulator.PalletB_PositionDOWN); //arrived
 		T0_9__0_10=(2==palletizer->OuterClawState);
-		T0_10__0_11=false; //arrived
-		T0_11__0_12=(1==palletizer->OuterClawState); // and arrived
+		T0_10__0_11=ManipulatorArrived(manipulator.PalletA_PositionUP) || ManipulatorArrived(manipulator.PalletB_PositionUP); //arrived
+		T0_11__0_12=ManipulatorArrived(manipulator.Working_Position) && (1==palletizer->OuterClawState); // and arrived
 
 		//Process transitions of Grab brick
 		T1_0__0_1=P8.TriggerUP();
-		T1_1__0_2=false; //arrived
+		T1_1__0_2=ManipulatorArrived(manipulator.GrabBoxes_PositionUP); //arrived
 		T1_2__0_3=(1==palletizer->FingerState);
-		T1_3__0_4=false; //arrived
+		T1_3__0_4=ManipulatorArrived(manipulator.GrabBoxes_PositionDOWN); //arrived
 		T1_4__0_5=(2==palletizer->FingerState);
-		T1_5__0_6=false; //arrived
-		T1_6__0_7=false; //arrived
+		T1_5__0_6=ManipulatorArrived(manipulator.GrabBoxes_PositionUP); //arrived
+		T1_6__0_7=ManipulatorArrived(palletA.GetNextBoxPosition().LandingPosition) || ManipulatorArrived(palletB.GetNextBoxPosition().LandingPosition); //arrived
 		T1_7__0_8=(2==palletizer->FingerState);
-		T1_8__0_9=false; //arrived
-		T1_9__0_10=false; //arrived
-
+		T1_8__0_9=ManipulatorArrived(palletA.GetActualBoxPosition().DisplacedPosition) || ManipulatorArrived(palletB.GetActualBoxPosition().DisplacedPosition); //arrived
+		T1_9__0_10=ManipulatorArrived(manipulator.PalletA_PositionUP) || ManipulatorArrived(manipulator.PalletB_PositionUP); //arrived
+		T1_10__0_11=ManipulatorArrived(manipulator.Working_Position); //arrived
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 	return nullptr;
