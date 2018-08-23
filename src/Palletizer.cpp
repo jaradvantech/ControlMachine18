@@ -122,10 +122,10 @@ Palletizer::Palletizer()
 	//----------------------------------------
 	SystemState=1; //1:Run 2:Wait
 
-	XAxisSetting=2000;//X axis
-	YAxisSetting=10897;//X axis
-	ZAxisSetting=3500;//X axis
-	WAxisSetting=1216;//X axis
+	XAxisSetting=-3601;//X axis
+	YAxisSetting=-2536;//X axis
+	ZAxisSetting=330;//X axis
+	WAxisSetting=2073;//X axis
 
 	FingerMovement=0; 	//Clip the tile 1.Open 2.Half open 3.Closed
 	OuterClawMovement=0;	//OuterClaw 1.Open 2.Half open 3.Closed
@@ -187,7 +187,7 @@ Palletizer::Palletizer()
 	TheAccuracyOfZAxis=50;
 	TheAccuracyOfWAxis=50;
 
-	CommunicationExchange=0;
+	CommunicationExchange=1;
 	//-----------------------------------------------
 }
 Palletizer* GetPalletizer() {return &palletizer;}
@@ -327,7 +327,7 @@ int PerformGlobalWriting(){
 	S7::SetDIntAt(Buffer,10,palletizer.ZAxisSetting);//X axis
 	S7::SetDIntAt(Buffer,14,palletizer.WAxisSetting);//X axis
 
-	S7::SetDIntAt(Buffer,18,palletizer.FingerMovement); 	//Clip the tile 1.Open 2.Half open 3.Closed
+	S7::SetByteAt(Buffer,18,palletizer.FingerMovement); 	//Clip the tile 1.Open 2.Half open 3.Closed
 	S7::SetByteAt(Buffer,19,palletizer.OuterClawMovement);	//OuterClaw 1.Open 2.Half open 3.Closed
 	S7::SetByteAt(Buffer,20,palletizer.LocationRollingOver);//Location Rolling-Over 1.Flat 2.Rolling-over
 
@@ -352,7 +352,7 @@ int PerformGlobalWriting(){
 	S7::SetByteAt(Buffer,36,palletizer.StorageBinFullB);							//1.Turn OFF 2. Torn ON
 
 	S7::SetDIntAt(Buffer,38,palletizer.TheTimeOfTheOuterClawHalfOpen);
-	S7::SetDIntAt(Buffer,42,palletizer.WipeDataOfTheChangeTileAndStorageBinFull);	//Clear the last grab
+	S7::SetByteAt(Buffer,42,palletizer.WipeDataOfTheChangeTileAndStorageBinFull);	//Clear the last grab
 	S7::SetByteAt(Buffer,43,palletizer.NearALowSpeed);								//1.Near a low speed 0. Go through the pulse value
 	S7::SetByteAt(Buffer,44,palletizer.TheNumberOfPackages);						//Exchange data bits
 

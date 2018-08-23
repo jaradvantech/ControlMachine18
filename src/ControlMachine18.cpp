@@ -59,7 +59,7 @@ void init()
 	//--------------------------------------------------------------------
 	// CONFIGURE Algorithm
 	//--------------------------------------------------------------------
-	Synchro::IncreaseSynchronizationPointValue(0);
+	//Synchro::IncreaseSynchronizationPointValue(0);
 	pthread_create(&AlgorithmThread, NULL, AlgorithmLoop, (void *) 0);
 	while (Synchro::GetSynchronizationPointValue(0) != 0)	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	//Wait until the algorithm has entered in its loop
@@ -75,7 +75,7 @@ int main()
 	while(1){
 
 
-
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 
 	return 0;

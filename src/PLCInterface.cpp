@@ -114,10 +114,10 @@ void * PLCAdquisitionLoop(void *Arg){
 		//std::chrono::_V2::high_resolution_clock::time_point t1 = std::chrono::_V2::high_resolution_clock::now();
 		//Check(ClientPlc14,PerformGlobalReading(),"GLOBAL READING");
 		ReadResult = PerformGlobalReading();
-		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		//Check(ClientPlc14,,"GLOBAL Writing");
 		WriteResult = PerformGlobalWriting();
-		std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		//std::chrono::_V2::high_resolution_clock::time_point t2 = std::chrono::_V2::high_resolution_clock::now();
 
 		//auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
